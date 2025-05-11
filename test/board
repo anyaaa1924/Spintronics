@@ -1,0 +1,79 @@
+#include <WiFi.h>
+#include <WebSocketsClient.h>
+#include <ArduinoJson.h>
+
+const char* ssid = "ssid";
+const char* password = "password";
+
+const char* serverIP = "IP";  // Replace with your computer's local IP
+const int serverPort = 5000;
+
+const int IR_PIN = 4;
+const int SMOKE_PIN = 34;
+
+WebSocketsClient webSocket;
+bool connected = false;
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+  switch(type) {
+    case WStype_CONNECTED:
+      Serial.println("WebSocket connected");
+      connected = true;
+      break;
+    case WStype_DISCONNECTED:
+      Serial.println("WebSocket disconnected");
+      connected = false;
+      break;
+    case WStype_ERROR:
+      Serial.println("WebSocket error");
+      break;
+    case WStype_TEXT:
+      Serial.printf("Received message: %s\n", payload);
+      break;
+    default:
+      break;
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(IR_PIN, INPUT);
+  pinMode(SMOKE_PIN, INPUT);
+
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("\nConnected");
+
+  webSocket.begin(serverIP, serverPort, "/ws");
+  webSocket.onEvent(webSocketEvent);
+  webSocket.setReconnectInterval(5000);
+}
+void loop() {
+  webSocket.loop();
+
+  if (!connected) return;  // Skip sending if not connected
+
+  int irValue = digitalRead(IR_PIN);
+  int smokeValue = analogRead(SMOKE_PIN);
+  const int smokeThreshold = 400;
+
+  String accidentStatus = (irValue == 1) ? "Accident Detected" : "No Accident";
+  String fireStatus = (smokeValue > smokeThreshold) ? "Fire Detected" : "No Fire";
+
+// Print detailed status
+  Serial.println("GOT VALUES: IR = " + String(irValue) + " (" + accidentStatus + "), Smoke = " + String(smokeValue) + " (" + fireStatus + ")");
+
+  StaticJsonDocument<100> doc;
+  doc["ir"] = irValue;
+  doc["smoke"] = smokeValue;
+
+  String jsonStr;
+  serializeJson(doc, jsonStr);
+  webSocket.sendTXT(jsonStr);
+
+  delay(2000);
+}
