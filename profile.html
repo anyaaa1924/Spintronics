@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile - Spintronics</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #f4f4f4, #e0eafc);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card-container {
+      perspective: 1000px;
+    }
+    .flip-card {
+      width: 320px;
+      height: 450px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+    }
+    .card-container:hover .flip-card {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .card-front {
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-front img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .card-back {
+      background: #0d6efd;
+      color: white;
+      transform: rotateY(180deg);
+      padding: 1rem;
+    }
+    .alert-box {
+      margin-top: 20px;
+    }
+    .weather-info {
+      margin-top: 30px;
+      max-width: 400px;
+    }
+    .profile-badges {
+      margin-top: 1rem;
+    }
+    .profile-badges span {
+      background: #198754;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column align-items-center justify-content-center vh-100">
+
+  <div class="card-container">
+    <div class="flip-card">
+      <div class="card-front text-center p-4">
+        <img src="https://img.icons8.com/color/96/user-male-circle.png" alt="User" />
+        <h4 class="mt-3">Ansh Sharma</h4>
+        <p><i class="bi bi-truck"></i> Vehicle ID: <strong>KA01AB1234</strong></p>
+        <p><i class="bi bi-person-badge"></i> Driver ID: <strong>789XYZ</strong></p>
+        <div class="profile-badges">
+          <span>Verified</span>
+          <span>Active</span>
+        </div>
+      </div>
+      <div class="card-back">
+        <h5><i class="bi bi-telephone-inbound"></i> Emergency Contacts</h5>
+        <ul class="list-unstyled mb-3">
+          <li><i class="bi bi-person"></i> Dad: +91-9876543210</li>
+          <li><i class="bi bi-person"></i> Friend: +91-7795343962</li>
+          <li><i class="bi bi-shield-exclamation"></i> Emergency: 100</li>
+          <li><i class="bi bi-truck"></i> Ambulance: 108</li>
+          <li><i class="bi bi-fire"></i> Fire: 101</li>
+        </ul>
+        <div>
+          <input id="phone" class="form-control mb-2" type="text" placeholder="Enter phone number">
+          <button class="btn btn-light w-100" onclick="sendAlert()">Send Alert</button>
+        </div>
+        <div id="alertResult" class="alert-box"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    function sendAlert() {
+      const phone = document.getElementById("phone").value;
+      if (!phone) {
+        document.getElementById("alertResult").innerHTML = `<div class="alert alert-danger mt-3">Please enter a phone number.</div>`;
+        return;
+      }
+      fetch('http://127.0.0.1:5000/send-alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone, message: "\uD83D\uDEA8 Emergency Alert from Spintronics V2V! Crash Detected 10 cm ahead! Stay safe" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById("alertResult").innerHTML = `<div class="alert alert-success mt-3">✅ Alert sent successfully to ${phone}</div>`;
+        } else {
+          document.getElementById("alertResult").innerHTML = `<div class="alert alert-danger mt-3">❌ Failed to send alert.</div>`;
+        }
+      })
+      .catch(err => {
+        document.getElementById("alertResult").innerHTML = `<div class="alert alert-danger mt-3">⚠️ Error occurred: ${err.message}</div>`;
+      });
+    }
+  </script>
+
+</body>
+</html>

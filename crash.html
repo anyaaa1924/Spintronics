@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crash Detection & Severity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    
+    .status-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .status-card h5 {
+      margin-bottom: 10px;
+    }
+
+    .status-card p {
+      font-size: 1.2em;
+    }
+
+    .cctv-image {
+      width: 100%;
+      height: auto;
+      border: 2px solid #ddd;
+      margin-top: 20px;
+    }
+
+    .severity-bar {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+
+    .severity-bar div {
+      height: 20px;
+      border-radius: 5px;
+    }
+
+    .low {
+      width: 20%;
+      background-color: green;
+    }
+
+    .medium {
+      width: 60%;
+      background-color: orange;
+    }
+
+    .high {
+      width: 100%;
+      background-color: red;
+    }
+  </style>
+</head>
+<body class="container py-5">
+  <h1>🚗 Crash Detection & Severity</h1>
+  <p>This system uses sensors to detect impact force and crash severity. It automatically notifies emergency services and nearby vehicles with real-time location data.</p>
+
+  <div class="row">
+    <div class="col-md-6">
+      <!-- Fire Alarm Status -->
+      <div class="status-card">
+        <h5>🔥 Fire Alarm Status</h5>
+        <p id="fire-alarm-status" class="fw-bold text-success">Not Triggered</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <!-- Smoke Detection Status -->
+      <div class="status-card">
+        <h5>💨 Smoke Detection Status</h5>
+        <p id="smoke-detection-status" class="fw-bold text-success">No Smoke Detected</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crash Impact Rate -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="status-card">
+        <h5>💥 Crash Impact</h5>
+        <p id="crash-impact" class="fw-bold text-warning">Low Impact</p>
+        <div class="severity-bar">
+          <div id="impact-severity" class="low"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CCTV Captured Image -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="status-card">
+        <h5>📷 CCTV Captured Image</h5>
+        <img src="C:\Users\wellcome\OneDrive\Documents\Lucifer\CAR.jpg" alt="CCTV Image" class="cctv-image">
+        <p class="text-muted mt-2">CCTV Camera captures the moment of impact.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simulate fire alarm status
+    const fireAlarmStatus = Math.random() < 0.5 ? "Not Triggered" : "Triggered";
+    document.getElementById("fire-alarm-status").innerText = fireAlarmStatus;
+    document.getElementById("fire-alarm-status").classList = fireAlarmStatus === "Triggered" ? "fw-bold text-danger" : "fw-bold text-success";
+
+    // Simulate smoke detection status
+    const smokeDetectionStatus = Math.random() < 0.5 ? "No Smoke Detected" : "Smoke Detected";
+    document.getElementById("smoke-detection-status").innerText = smokeDetectionStatus;
+    document.getElementById("smoke-detection-status").classList = smokeDetectionStatus === "Smoke Detected" ? "fw-bold text-danger" : "fw-bold text-success";
+
+    // Simulate crash impact severity
+    const impactLevel = Math.random();
+    let crashImpactText = "Low Impact";
+    let severityClass = "low";
+
+    if (impactLevel > 0.5 && impactLevel <= 0.8) {
+      crashImpactText = "Medium Impact";
+      severityClass = "medium";
+    } else if (impactLevel > 0.8) {
+      crashImpactText = "High Impact";
+      severityClass = "high";
+    }
+
+    document.getElementById("crash-impact").innerText = crashImpactText;
+    document.getElementById("impact-severity").classList = severityClass;
+  </script>
+
+</body>
+</html>

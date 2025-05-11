@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vehicle Intrusion Detection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .status-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .status-card h5 {
+      margin-bottom: 10px;
+    }
+
+    .status-card p {
+      font-size: 1.2em;
+    }
+
+    .cctv-image {
+      width: 100%;
+      height: auto;
+      border: 2px solid #ddd;
+      margin-top: 20px;
+    }
+
+    .alert-message {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .known-people-list {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .people-list-item {
+      font-weight: bold;
+    }
+
+    .intruder {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .intruder img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid #dc3545;
+    }
+
+    .intruder-name {
+      font-weight: bold;
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body class="container py-5">
+  <h1>🚗 Vehicle Intrusion Detection</h1>
+  <p>This system alerts the vehicle owner and authorities upon detecting unauthorized access using camera-based analytics and motion sensors. It can trigger alarms and send video snippets in real-time.</p>
+
+  <div class="row">
+    <div class="col-md-6">
+      <!-- CCTV Captured Image -->
+      <div class="status-card">
+        <h5>📷 CCTV Captured Image</h5>
+        <img src="C:\Users\wellcome\OneDrive\Documents\Lucifer\veh.jpg" alt="CCTV Image" class="cctv-image">
+        <p class="text-muted mt-2">This image was captured by the vehicle's surveillance system showing potential intrusion.</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <!-- Intrusion Alert -->
+      <div class="status-card">
+        <h5>🚨 Intrusion Alert</h5>
+        <p class="alert-message" id="intrusion-alert">No Intrusion Detected</p>
+      </div>
+
+      <!-- Door Left Open Alert -->
+      <div class="status-card">
+        <h5>🚪 Door Left Open</h5>
+        <p class="alert-message" id="door-alert">All doors are closed</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Known and Unknown People Section -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="status-card">
+        <h5>👤 Known People (Authorized to Open the Car)</h5>
+        <ul class="known-people-list">
+          <li class="people-list-item">Ananya (Owner)</li>
+          <li class="people-list-item">Abhinav (Friend)</li>
+          <li class="people-list-item">Sneha (Family)</li>
+          <li class="people-list-item">Tilak (Friend)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="status-card">
+        <h5>❌ Unknown People (Unauthorized Access)</h5>
+        <p class="fw-bold" id="unknown-people-count">0</p>
+        <div id="intruder-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Intrusion logic
+    const intrusionDetected = Math.random() < 0.7;
+    document.getElementById("intrusion-alert").innerText = intrusionDetected ? "Intruder Detected!" : "No Intrusion Detected";
+    document.getElementById("intrusion-alert").style.color = intrusionDetected ? "red" : "green";
+
+    // Door logic
+    const doorLeftOpen = Math.random() < 0.5;
+    document.getElementById("door-alert").innerText = doorLeftOpen ? "A door is left open!" : "All doors are closed";
+    document.getElementById("door-alert").style.color = doorLeftOpen ? "red" : "green";
+
+    // Simulate unknown people
+    const unknownCount = Math.floor(Math.random() * 4) + 1;
+    document.getElementById("unknown-people-count").innerText = unknownCount;
+
+    const intruderList = document.getElementById("intruder-list");
+
+    // Load random faces
+    for (let i = 0; i < unknownCount; i++) {
+      const img = document.createElement("img");
+      img.src = `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`;
+      const name = document.createElement("span");
+      name.className = "intruder-name";
+      name.innerText = "Unknown Person " + (i + 1);
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "intruder";
+      wrapper.appendChild(img);
+      wrapper.appendChild(name);
+
+      intruderList.appendChild(wrapper);
+    }
+  </script>
+</body>
+</html>
